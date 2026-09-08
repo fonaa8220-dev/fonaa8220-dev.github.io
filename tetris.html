@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="잠깐 쉬어가는 미니 테트리스 게임입니다.">
+  <title>쉬어가세요^^ — fonaa8220</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+  <script src="tetris.js" defer></script>
+</head>
+<body data-page="tetris">
+  <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+  <div class="page-grid" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="홈으로 이동"><span class="brand-mark" aria-hidden="true">E</span><span>EUME<span class="brand-dot">.</span>zip</span></a>
+    <nav class="tabs" aria-label="주요 메뉴">
+      <a class="tab" href="about.html" data-route="about">자기소개</a>
+      <a class="tab" href="portfolio.html" data-route="portfolio">포폴 소개</a>
+      <a class="tab" href="tetris.html" data-route="tetris">쉬어가세요^^</a>
+    </nav>
+  </header>
+
+  <main class="subpage game-page" id="main-content">
+    <section class="page-heading game-heading">
+      <p class="eyebrow">BREAK TIME · 03</p>
+      <h1>쉬어가세요<br><span>^^ㅋㅋ</span></h1>
+      <p>머리 식힐 겸 한 판만 하고 가세요.<br>점수는 저장되지 않으니 부담 없이!</p>
+    </section>
+
+    <section class="game-shell" aria-label="미니 테트리스">
+      <div class="arcade-card">
+        <div class="game-stats" aria-live="polite">
+          <span>SCORE <strong data-score>000000</strong></span>
+          <span>LINES <strong data-lines>00</strong></span>
+          <span>LEVEL <strong data-level>01</strong></span>
+        </div>
+
+        <div class="game-screen">
+          <canvas id="tetris" width="300" height="600" aria-label="테트리스 게임 화면"></canvas>
+          <div class="game-overlay" data-game-overlay>
+            <span class="overlay-kicker">MINI TETRIS</span>
+            <strong data-overlay-title>READY?</strong>
+            <span data-overlay-copy>시작 버튼을 눌러주세요</span>
+          </div>
+        </div>
+
+        <div class="mobile-controls" aria-label="모바일 게임 조작">
+          <button type="button" data-action="left" aria-label="왼쪽 이동">←</button>
+          <button type="button" data-action="rotate" aria-label="회전">↻</button>
+          <button type="button" data-action="right" aria-label="오른쪽 이동">→</button>
+          <button type="button" data-action="down" aria-label="아래로 이동">↓</button>
+          <button class="wide-control" type="button" data-action="drop" aria-label="빠르게 내리기">DROP</button>
+        </div>
+      </div>
+
+      <aside class="game-panel">
+        <span class="game-sticker" aria-hidden="true">JUST<br>ONE<br>MORE!</span>
+        <p class="panel-label">HOW TO PLAY</p>
+        <dl class="key-guide">
+          <div><dt><kbd>←</kbd><kbd>→</kbd></dt><dd>좌우 이동</dd></div>
+          <div><dt><kbd>↑</kbd></dt><dd>블록 회전</dd></div>
+          <div><dt><kbd>↓</kbd></dt><dd>천천히 내리기</dd></div>
+          <div><dt><kbd>SPACE</kbd></dt><dd>바로 내리기</dd></div>
+          <div><dt><kbd>P</kbd></dt><dd>일시정지</dd></div>
+        </dl>
+        <div class="game-actions">
+          <button class="game-button game-button-main" type="button" data-start>게임 시작 <span aria-hidden="true">▶</span></button>
+          <button class="game-button" type="button" data-pause disabled>일시정지</button>
+          <button class="game-button" type="button" data-reset disabled>다시하기</button>
+        </div>
+
+        <section class="ranking-card" aria-labelledby="ranking-title">
+          <div class="ranking-heading">
+            <p id="ranking-title">LOCAL RANKING</p>
+            <span>TOP 5</span>
+          </div>
+          <form class="score-form" data-score-form>
+            <label for="player-name">닉네임</label>
+            <div class="score-entry">
+              <input id="player-name" name="player-name" type="text" value="PLAYER" maxlength="10" autocomplete="nickname" aria-describedby="save-message">
+              <button type="submit" data-save-score disabled>점수 저장</button>
+            </div>
+            <p id="save-message" data-save-message>게임 오버 후 점수를 저장할 수 있어요.</p>
+          </form>
+          <ol class="ranking-list" data-ranking-list aria-live="polite"></ol>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>© <span data-year></span> fonaa8220</span><a href="index.html">홈으로 돌아가기</a></footer>
+</body>
+</html>

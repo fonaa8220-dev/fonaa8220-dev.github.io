@@ -3,68 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>나의 첫 GitHub 페이지</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      min-height: 100vh;
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #1f2937;
-      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
-    }
-
-    main {
-      width: min(100%, 560px);
-      padding: 48px 32px;
-      text-align: center;
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(79, 70, 229, 0.12);
-    }
-
-    h1 {
-      margin: 0 0 16px;
-      font-size: clamp(2rem, 8vw, 3.5rem);
-      line-height: 1.1;
-    }
-
-    p {
-      margin: 0 0 28px;
-      color: #6b7280;
-      font-size: 1.1rem;
-      line-height: 1.7;
-    }
-
-    a {
-      display: inline-block;
-      padding: 12px 20px;
-      color: white;
-      font-weight: 700;
-      text-decoration: none;
-      background: #4f46e5;
-      border-radius: 999px;
-      transition: transform 0.2s, background 0.2s;
-    }
-
-    a:hover {
-      background: #4338ca;
-      transform: translateY(-2px);
-    }
-  </style>
+  <meta name="description" content="fonaa8220의 개인 홈페이지입니다.">
+  <title>fonaa8220 — Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
 </head>
-<body>
-  <main>
-    <h1>안녕하세요! 👋</h1>
-    <p>나의 첫 GitHub Pages 웹사이트입니다.<br>앞으로 이곳을 멋지게 채워 나갈 예정이에요.</p>
-    <a href="https://github.com/fonaa8220-dev">GitHub 방문하기</a>
+<body data-page="home">
+  <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+  <div class="page-grid" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="홈으로 이동">
+      <span class="brand-mark" aria-hidden="true">E</span>
+      <span>EUME<span class="brand-dot">.</span>zip</span>
+    </a>
+    <nav class="tabs" aria-label="주요 메뉴">
+      <a class="tab" href="about.html" data-route="about">자기소개</a>
+      <a class="tab" href="portfolio.html" data-route="portfolio">포폴 소개</a>
+      <a class="tab" href="tetris.html" data-route="tetris">쉬어가세요^^</a>
+    </nav>
+  </header>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>HELLO WORLD ✦ ABOUT ME ✦ SELECTED WORK ✦ KEEP SCROLLING ✦</span>
+      <span>HELLO WORLD ✦ ABOUT ME ✦ SELECTED WORK ✦ KEEP SCROLLING ✦</span>
+      <span>HELLO WORLD ✦ ABOUT ME ✦ SELECTED WORK ✦ KEEP SCROLLING ✦</span>
+    </div>
+  </div>
+
+  <main class="home" id="main-content">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-labels" aria-hidden="true">
+        <span class="label label-blue">PERSONAL ARCHIVE</span>
+        <span class="label label-pink">VOL. 01</span>
+      </div>
+      <p class="eyebrow">HELLO, NICE TO MEET YOU!</p>
+      <h1 id="hero-title">반갑습니다.<br><em>여기는 제 공간이에요.</em></h1>
+      <p class="hero-copy">좋아하는 것과 해온 작업을 하나씩 모아두는<br class="desktop-break">작지만 선명한 개인 아카이브입니다.</p>
+      <div class="hero-actions">
+        <a class="primary-button" href="about.html">자기소개 보기 <span aria-hidden="true">↗</span></a>
+        <a class="text-button" href="portfolio.html">포트폴리오 보기</a>
+      </div>
+    </section>
+
+    <aside class="phone-stage" aria-label="사진이 들어갈 은회색 레트로 휴대폰" data-tilt>
+      <div class="phone-visual">
+        <img class="phone-device" src="assets/retro-phone.png" alt="키치한 스티커로 꾸민 은회색 레트로 휴대폰">
+        <div class="phone-screen" aria-label="프로필 사진 자리">
+          <div class="photo-placeholder">
+            <span aria-hidden="true">✦</span>
+            <strong>YOUR PHOTO</strong>
+            <small>UPLOAD NEXT</small>
+          </div>
+        </div>
+      </div>
+      <span class="phone-caption" aria-hidden="true">PHOTO PHONE · 2000s</span>
+    </aside>
   </main>
+
+  <footer class="site-footer">
+    <span>© <span data-year></span> fonaa8220</span>
+    <span>Ulsan, Korea</span>
+  </footer>
 </body>
 </html>
