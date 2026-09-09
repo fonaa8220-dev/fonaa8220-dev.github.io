@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="fonaa8220의 포트폴리오 소개 페이지입니다.">
-  <title>포폴 소개 — fonaa8220</title>
+  <meta name="description" content="김정음의 프로젝트 포트폴리오 페이지입니다.">
+  <title>포폴 소개 — EUME.zip</title>
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
 </head>
@@ -22,15 +22,64 @@
   <main class="subpage" id="main-content">
     <section class="page-heading">
       <p class="eyebrow">PORTFOLIO · 02</p>
-      <h1>포폴 소개</h1>
-      <p>완성한 작업을 하나씩 소개할 페이지입니다.</p>
+      <h1>PROJECT<br>FILES</h1>
+      <p>공부한 것을 그냥 지나치지 않고,<br>직접 써보며 쌓는 중입니다.</p>
     </section>
-    <section class="empty-content" aria-label="포트폴리오 내용 자리">
-      <span class="empty-tag">EMPTY PAGE</span>
-      <div class="empty-icon" aria-hidden="true">＋</div>
-      <p>프로젝트를 이곳에 추가해 보세요.</p>
-      <span>프로젝트 이미지, 설명, 링크 등을 담을 수 있습니다.</span>
+    <section class="portfolio-intro" aria-label="포트폴리오 안내">
+      <span class="portfolio-scribble" aria-hidden="true">✦</span>
+      <p>데이터를 찾고 정리해서, <mark>어디에 쓸 수 있을지</mark> 고민합니다.</p>
+      <small>아직 진행 중인 파일도, 완성한 기록도 함께 모아두는 아카이브.</small>
     </section>
+    <section class="project-grid" aria-label="프로젝트 목록">
+      <article class="project-card project-bike">
+        <div class="project-topline"><span>01 / DATA PROJECT</span><span class="project-state">IN PROGRESS</span></div>
+        <div class="project-icon" aria-hidden="true">🚲</div>
+        <p class="project-type">LOCAL DATA LAB</p>
+        <h2>울산 공공자전거<br>배치 후보지 분석</h2>
+        <p class="project-copy">“울산에 공공자전거가 생긴다면 어디에 두면 좋을까?”에서 시작한 프로젝트입니다. 자전거도로·대중교통·유동인구 데이터를 모아 배치 후보지를 살펴보고 있어요.</p>
+        <ul class="project-tags" aria-label="사용 기술"><li>PYTHON</li><li>PANDAS</li><li>DATA</li></ul>
+      </article>
+      <article class="project-card project-shopping">
+        <div class="project-topline"><span>02 / DATA PROJECT</span><span class="project-state">IN PROGRESS</span></div>
+        <div class="project-icon" aria-hidden="true">🛍️</div>
+        <p class="project-type">SHOPPING SIGNAL</p>
+        <h2>네이버 쇼핑<br>데이터 수집</h2>
+        <p class="project-copy">네이버 API와 쇼핑 데이터를 활용해 상품·키워드 트렌드를 읽는 방법을 공부하고 있습니다. 수집에서 끝내지 않고, 데이터가 어떤 선택을 도울 수 있는지 찾는 중이에요.</p>
+        <ul class="project-tags" aria-label="사용 기술"><li>API</li><li>PYTHON</li><li>INSIGHT</li></ul>
+      </article>
+      <article class="project-card project-archive">
+        <div class="project-topline"><span>03 / WEB PROJECT</span><span class="project-state">LIVE</span></div>
+        <div class="project-icon" aria-hidden="true">🗂️</div>
+        <p class="project-type">PERSONAL ARCHIVE</p>
+        <h2>EUME.zip<br>개인 아카이브</h2>
+        <p class="project-copy">지금 보고 있는 이 공간입니다. HTML, CSS, JavaScript로 직접 꾸리고, 좋아하는 작업과 배운 것을 보기 좋게 기록하는 중이에요. 쉬어가세요^^ 탭의 테트리스도 있어요.</p>
+        <ul class="project-tags" aria-label="사용 기술"><li>HTML</li><li>CSS</li><li>JAVASCRIPT</li></ul>
+      </article>
+    </section>
+    <section class="toolbox" aria-labelledby="toolbox-title">
+      <div class="toolbox-heading">
+        <div>
+          <p id="toolbox-title">MY TOOLBOX</p>
+          <h2>직접 써보며 익히는 도구들</h2>
+        </div>
+        <span aria-hidden="true">🧰</span>
+      </div>
+      <div class="toolbox-grid">
+        <article class="tool-group tool-group-blue">
+          <p>CODE &amp; DATA</p>
+          <ul><li>Python</li><li>NumPy</li><li>Pandas</li><li>Data Visualization</li></ul>
+        </article>
+        <article class="tool-group tool-group-pink">
+          <p>WORKFLOW</p>
+          <ul><li>Git</li><li>GitHub</li><li>VS Code</li><li>Jupyter Notebook</li></ul>
+        </article>
+        <article class="tool-group tool-group-lime">
+          <p>AI &amp; WEB</p>
+          <ul><li>Generative AI</li><li>Prompting</li><li>API 활용</li><li>HTML · CSS · JavaScript</li></ul>
+        </article>
+      </div>
+    </section>
+    <p class="portfolio-note"><span aria-hidden="true">🦘</span> 다음 프로젝트도 천천히, 하지만 분명하게 추가될 예정!</p>
   </main>
   <footer class="site-footer"><span>© <span data-year></span> fonaa8220</span><a href="index.html">홈으로 돌아가기</a></footer>
 </body>

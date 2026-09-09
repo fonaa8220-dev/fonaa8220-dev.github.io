@@ -54,3 +54,20 @@ if (!prefersReducedMotion.matches && window.matchMedia("(pointer: fine)").matche
     document.documentElement.style.setProperty("--mouse-y", `${event.clientY}px`);
   }, { passive: true });
 }
+
+const profileToggle = document.querySelector("[data-profile-toggle]");
+
+if (profileToggle) {
+  const toggleProfile = () => {
+    const isSwitched = profileToggle.classList.toggle("is-switched");
+    profileToggle.setAttribute("aria-pressed", String(isSwitched));
+  };
+
+  profileToggle.addEventListener("click", toggleProfile);
+  profileToggle.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleProfile();
+    }
+  });
+}
