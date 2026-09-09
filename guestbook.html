@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EUME.zip의 교환 일기장 스타일 방명록입니다.">
+  <title>방명록 — EUME.zip</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+  <script src="guestbook.js" defer></script>
+</head>
+<body data-page="guestbook">
+  <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+  <div class="page-grid" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="홈으로 이동"><span class="brand-mark" aria-hidden="true">E</span><span>EUME<span class="brand-dot">.</span>zip</span></a>
+    <nav class="tabs" aria-label="주요 메뉴">
+      <a class="tab" href="about.html" data-route="about">자기소개</a>
+      <a class="tab" href="portfolio.html" data-route="portfolio">포폴 소개</a>
+      <a class="tab" href="tetris.html" data-route="tetris">쉬어가세요^^</a>
+      <a class="tab" href="guestbook.html" data-route="guestbook">방명록</a>
+    </nav>
+  </header>
+  <main class="subpage guestbook-page" id="main-content">
+    <section class="page-heading">
+      <p class="eyebrow">GUEST BOOK · 04</p>
+      <h1>EXCHANGE<br>DIARY</h1>
+      <p>낭만 합격💌</p>
+    </section>
+    <section class="guestbook-shell" aria-label="방명록">
+      <form class="diary-composer" data-guestbook-form>
+        <span class="diary-tape diary-tape-left" aria-hidden="true"></span>
+        <span class="diary-tape diary-tape-right" aria-hidden="true"></span>
+        <p class="diary-kicker">TO. EUME</p>
+        <h2>오늘의 한 페이지</h2>
+        <p class="diary-guide">짧은 안부, 응원, 아무 말이나 좋아요!</p>
+        <label for="guest-name">FROM.</label>
+        <input id="guest-name" name="name" maxlength="18" autocomplete="nickname" placeholder="닉네임을 적어주세요" required>
+        <label for="guest-message">MESSAGE.</label>
+        <textarea id="guest-message" name="message" maxlength="180" placeholder="여기에 남겨주세요 ✎" required></textarea>
+        <div class="diary-actions">
+          <span data-char-count aria-live="polite">0 / 180</span>
+          <button type="submit">페이지 붙이기 <span aria-hidden="true">✦</span></button>
+        </div>
+        <p class="diary-local-note">이 버전의 글은 작성한 브라우저에 저장돼요.</p>
+      </form>
+      <section class="diary-board" aria-labelledby="diary-board-title">
+        <div class="board-heading">
+          <div><p id="diary-board-title">TODAY'S NOTES</p><strong><span data-entry-count>0</span> PAGE(S)</strong></div>
+          <span class="board-sticker" aria-hidden="true">🍀</span>
+        </div>
+        <div class="note-list" data-guestbook-list aria-live="polite">
+          <div class="note-empty"><span aria-hidden="true">💌</span><strong>첫 번째 페이지를 남겨주세요!</strong><p>다녀간 흔적이 이곳에 쌓여요.</p></div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <footer class="site-footer"><span>© <span data-year></span> fonaa8220</span><a href="index.html">홈으로 돌아가기</a></footer>
+</body>
+</html>
