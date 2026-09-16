@@ -1,21 +1,16 @@
 const guestbookForm = document.querySelector("[data-guestbook-form]");
 const guestbookList = document.querySelector("[data-guestbook-list]");
 const guestbookCount = document.querySelector("[data-entry-count]");
+const guestbookStatus = document.querySelector("[data-guestbook-status]");
 const charCount = document.querySelector("[data-char-count]");
 const messageInput = document.querySelector("#guest-message");
-const guestbookKey = "eume-zip-guestbook-v1";
+const submitButton = guestbookForm?.querySelector('button[type="submit"]');
+const supabaseClient = window.getEumeSupabaseClient?.() || null;
 
 if (guestbookForm && guestbookList && guestbookCount) {
-  const readEntries = () => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(guestbookKey) || "[]");
-      return Array.isArray(saved) ? saved : [];
-    } catch {
-      return [];
-    }
-  };
+  let entries = [];
 
-  const escapeHtml = (value) => value.replace(/[&<>"']/g, (character) => ({
+  const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
   })[character]);
 
@@ -24,7 +19,6 @@ if (guestbookForm && guestbookList && guestbookCount) {
   }).format(new Date(value));
 
   const renderEntries = () => {
-    const entries = readEntries();
     guestbookCount.textContent = entries.length;
 
     if (!entries.length) {
@@ -32,9 +26,10 @@ if (guestbookForm && guestbookList && guestbookCount) {
       return;
     }
 
-    guestbookList.innerHTML = entries.slice().reverse().map((entry, index) => {
+    guestbookList.innerHTML = entries.map((entry, index) => {
       const color = ["note-blue", "note-pink", "note-lime"][index % 3];
-      return `<article class="guest-note ${color}"><span class="note-pin" aria-hidden="true">✦</span><p>${escapeHtml(entry.message).replace(/\n/g, "<br>")}</p><footer><strong>FROM. ${escapeHtml(entry.name)}</strong><time datetime="${entry.createdAt}">${formatDate(entry.createdAt)}</time></footer></article>`;
+      const safeDate = escapeHtml(entry.created_at);
+      return `<article class="guest-note ${color}"><span class="note-pin" aria-hidden="true">✦</span><p>${escapeHtml(entry.message).replace(/\n/g, "<br>")}</p><footer><strong>FROM. ${escapeHtml(entry.name)}</strong><time datetime="${safeDate}">${formatDate(entry.created_at)}</time></footer></article>`;
     }).join("");
   };
 
@@ -42,23 +37,67 @@ if (guestbookForm && guestbookList && guestbookCount) {
     if (charCount && messageInput) charCount.textContent = `${messageInput.value.length} / 180`;
   };
 
+  const loadEntries = async () => {
+    if (!supabaseClient) {
+      guestbookStatus.textContent = "방명록 연결 설정을 확인해 주세요.";
+      submitButton.disabled = true;
+      renderEntries();
+      return;
+    }
+
+    const { data, error } = await supabaseClient
+      .from("guestbook_entries")
+      .select("id, name, message, created_at")
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (error) {
+      console.error("방명록을 불러오지 못했습니다.", error);
+      guestbookStatus.textContent = "방명록을 불러오지 못했어요. 잠시 후 새로고침해 주세요.";
+      return;
+    }
+
+    entries = data || [];
+    guestbookStatus.textContent = "남긴 글은 모든 방문자에게 함께 보여요.";
+    renderEntries();
+  };
+
   messageInput?.addEventListener("input", updateCount);
 
-  guestbookForm.addEventListener("submit", (event) => {
+  guestbookForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (!supabaseClient || submitButton.disabled) return;
+
     const formData = new FormData(guestbookForm);
-    const name = String(formData.get("name") || "").trim();
-    const message = String(formData.get("message") || "").trim();
+    const name = String(formData.get("name") || "").trim().slice(0, 18);
+    const message = String(formData.get("message") || "").trim().slice(0, 180);
     if (!name || !message) return;
 
-    const entries = readEntries();
-    entries.push({ name: name.slice(0, 18), message: message.slice(0, 180), createdAt: new Date().toISOString() });
-    localStorage.setItem(guestbookKey, JSON.stringify(entries.slice(-30)));
+    submitButton.disabled = true;
+    guestbookStatus.textContent = "페이지를 붙이는 중이에요…";
+
+    const { data, error } = await supabaseClient
+      .from("guestbook_entries")
+      .insert({ name, message })
+      .select("id, name, message, created_at")
+      .single();
+
+    submitButton.disabled = false;
+
+    if (error) {
+      console.error("방명록을 저장하지 못했습니다.", error);
+      guestbookStatus.textContent = "저장하지 못했어요. 작성 내용은 유지했으니 다시 시도해 주세요.";
+      return;
+    }
+
+    entries.unshift(data);
+    entries = entries.slice(0, 50);
     guestbookForm.reset();
     updateCount();
+    guestbookStatus.textContent = "방명록에 페이지를 붙였어요!";
     renderEntries();
   });
 
   updateCount();
-  renderEntries();
+  loadEntries();
 }

@@ -7,6 +7,8 @@
   <title>방명록 — EUME.zip</title>
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
   <script src="guestbook.js" defer></script>
 </head>
 <body data-page="guestbook">
@@ -42,7 +44,7 @@
           <span data-char-count aria-live="polite">0 / 180</span>
           <button type="submit">페이지 붙이기 <span aria-hidden="true">✦</span></button>
         </div>
-        <p class="diary-local-note">이 버전의 글은 작성한 브라우저에 저장돼요.</p>
+        <p class="diary-local-note" data-guestbook-status aria-live="polite">방명록을 불러오는 중이에요.</p>
       </form>
       <section class="diary-board" aria-labelledby="diary-board-title">
         <div class="board-heading">

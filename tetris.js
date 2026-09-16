@@ -14,13 +14,13 @@ const playerNameInput = document.querySelector("#player-name");
 const saveScoreButton = document.querySelector("[data-save-score]");
 const saveMessage = document.querySelector("[data-save-message]");
 const rankingList = document.querySelector("[data-ranking-list]");
+const supabaseClient = window.getEumeSupabaseClient?.() || null;
 
 const COLS = 10;
 const ROWS = 20;
 const BLOCK_SIZE = 30;
 const colors = [null, "#ff4fa3", "#1746ff", "#ff7847", "#d9ff43", "#61e7ca", "#a875ff", "#ffdd38"];
 const pieceTypes = "TJLOSZI";
-const STORAGE_KEY = "fonaa-tetris-ranking-v1";
 
 let board = createMatrix(COLS, ROWS);
 let score = 0;
@@ -33,7 +33,9 @@ let running = false;
 let paused = false;
 let animationId;
 let scoreSaved = false;
-let ranking = loadRanking();
+let ranking = [];
+let rankingReady = false;
+let rankingStatus = "랭킹을 불러오는 중이에요.";
 
 const player = {
   position: { x: 0, y: 0 },
@@ -214,26 +216,41 @@ function updateStats() {
   levelElement.textContent = String(level).padStart(2, "0");
 }
 
-function loadRanking() {
-  try {
-    const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]");
-    if (!Array.isArray(saved)) return [];
-    return saved
-      .filter((entry) => entry && typeof entry.name === "string" && Number.isFinite(entry.score))
-      .sort((a, b) => b.score - a.score || b.lines - a.lines)
-      .slice(0, 20);
-  } catch {
-    return [];
+async function loadRanking() {
+  if (!supabaseClient) {
+    rankingStatus = "랭킹 연결 설정을 확인해 주세요.";
+    saveMessage.textContent = rankingStatus;
+    renderRanking();
+    return;
   }
-}
 
-function storeRanking() {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(ranking));
-    return true;
-  } catch {
-    return false;
+  const { data, error } = await supabaseClient
+    .from("game_scores")
+    .select("id, player_name, score, lines, created_at")
+    .order("score", { ascending: false })
+    .order("lines", { ascending: false })
+    .order("created_at", { ascending: true })
+    .limit(20);
+
+  if (error) {
+    console.error("랭킹을 불러오지 못했습니다.", error);
+    rankingStatus = "랭킹을 불러오지 못했어요.";
+    saveMessage.textContent = "랭킹 연결에 실패했어요. 잠시 후 새로고침해 주세요.";
+    renderRanking();
+    return;
   }
+
+  ranking = (data || []).map((entry) => ({
+    id: String(entry.id),
+    name: entry.player_name,
+    score: entry.score,
+    lines: entry.lines,
+    savedAt: entry.created_at
+  }));
+  rankingReady = true;
+  rankingStatus = "아직 기록이 없어요. 첫 1등에 도전!";
+  if (!running) saveMessage.textContent = "게임 오버 후 점수를 저장할 수 있어요.";
+  renderRanking();
 }
 
 function renderRanking(highlightId = "") {
@@ -243,7 +260,7 @@ function renderRanking(highlightId = "") {
   if (topScores.length === 0) {
     const emptyItem = document.createElement("li");
     emptyItem.className = "ranking-empty";
-    emptyItem.textContent = "아직 기록이 없어요. 첫 1등에 도전!";
+    emptyItem.textContent = rankingStatus;
     rankingList.append(emptyItem);
     return;
   }
@@ -268,34 +285,43 @@ function renderRanking(highlightId = "") {
   });
 }
 
-function saveCurrentScore(event) {
+async function saveCurrentScore(event) {
   event.preventDefault();
-  if (running || scoreSaved || saveScoreButton.disabled) return;
+  if (running || scoreSaved || saveScoreButton.disabled || !rankingReady) return;
 
   const playerName = playerNameInput.value.trim().slice(0, 10) || "PLAYER";
-  const entry = {
-    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-    name: playerName,
-    score,
-    lines,
-    savedAt: new Date().toISOString()
-  };
+  saveScoreButton.disabled = true;
+  saveMessage.textContent = "점수를 저장하는 중이에요…";
 
+  const { data, error } = await supabaseClient
+    .from("game_scores")
+    .insert({ player_name: playerName, score, lines })
+    .select("id, player_name, score, lines, created_at")
+    .single();
+
+  if (error) {
+    console.error("점수를 저장하지 못했습니다.", error);
+    saveScoreButton.disabled = false;
+    saveMessage.textContent = "저장하지 못했어요. 잠시 후 다시 시도해 주세요.";
+    return;
+  }
+
+  const entry = {
+    id: String(data.id),
+    name: data.player_name,
+    score: data.score,
+    lines: data.lines,
+    savedAt: data.created_at
+  };
   ranking.push(entry);
   ranking.sort((a, b) => b.score - a.score || b.lines - a.lines || a.savedAt.localeCompare(b.savedAt));
   ranking = ranking.slice(0, 20);
 
-  if (!storeRanking()) {
-    saveMessage.textContent = "이 브라우저에서는 점수를 저장할 수 없어요.";
-    return;
-  }
-
   scoreSaved = true;
-  saveScoreButton.disabled = true;
   const currentRank = ranking.findIndex((savedEntry) => savedEntry.id === entry.id) + 1;
-  saveMessage.textContent = currentRank <= 5
-    ? `저장 완료! 현재 ${currentRank}위예요 🎉`
-    : `저장 완료! 현재 ${currentRank}위예요.`;
+  saveMessage.textContent = currentRank > 0
+    ? (currentRank <= 5 ? `저장 완료! 현재 ${currentRank}위예요 🎉` : `저장 완료! 현재 ${currentRank}위예요.`)
+    : "저장 완료! TOP 20 진입에 다시 도전해 보세요.";
   renderRanking(entry.id);
 }
 
@@ -344,8 +370,10 @@ function endGame() {
   startButton.disabled = false;
   startButton.innerHTML = '다시 시작 <span aria-hidden="true">▶</span>';
   pauseButton.disabled = true;
-  saveScoreButton.disabled = false;
-  saveMessage.textContent = "닉네임을 확인하고 점수를 저장하세요.";
+  saveScoreButton.disabled = !rankingReady;
+  saveMessage.textContent = rankingReady
+    ? "닉네임을 확인하고 점수를 저장하세요."
+    : "랭킹에 연결되지 않아 지금은 점수를 저장할 수 없어요.";
   showOverlay("GAME OVER", `최종 점수 ${score}점 · 한 판 더?`);
 }
 
@@ -396,4 +424,5 @@ window.addEventListener("beforeunload", () => window.cancelAnimationFrame(animat
 
 updateStats();
 renderRanking();
+loadRanking();
 update();

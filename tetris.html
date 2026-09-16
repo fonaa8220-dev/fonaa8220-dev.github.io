@@ -7,6 +7,8 @@
   <title>쉬어가세요^^ — fonaa8220</title>
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
   <script src="tetris.js" defer></script>
 </head>
 <body data-page="tetris">
@@ -27,7 +29,7 @@
     <section class="page-heading game-heading">
       <p class="eyebrow">BREAK TIME · 03</p>
       <h1>쉬어가세요<br><span>^^ㅋㅋ</span></h1>
-      <p>머리 식힐 겸 한 판만 하고 가세요.<br>점수는 저장되지 않으니 부담 없이!</p>
+      <p>머리 식힐 겸 한 판만 하고 가세요.<br>좋은 기록은 랭킹에 남겨보세요!</p>
     </section>
 
     <section class="game-shell" aria-label="미니 테트리스">
@@ -74,7 +76,7 @@
 
         <section class="ranking-card" aria-labelledby="ranking-title">
           <div class="ranking-heading">
-            <p id="ranking-title">LOCAL RANKING</p>
+            <p id="ranking-title">GLOBAL RANKING</p>
             <span>TOP 5</span>
           </div>
           <form class="score-form" data-score-form>
