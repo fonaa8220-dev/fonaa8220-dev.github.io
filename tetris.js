@@ -227,6 +227,7 @@ async function loadRanking() {
   const { data, error } = await supabaseClient
     .from("game_scores")
     .select("id, player_name, score, lines, created_at")
+    .eq("game", "tetris")
     .order("score", { ascending: false })
     .order("lines", { ascending: false })
     .order("created_at", { ascending: true })
@@ -295,7 +296,7 @@ async function saveCurrentScore(event) {
 
   const { data, error } = await supabaseClient
     .from("game_scores")
-    .insert({ player_name: playerName, score, lines })
+    .insert({ game: "tetris", player_name: playerName, score, lines })
     .select("id, player_name, score, lines, created_at")
     .single();
 

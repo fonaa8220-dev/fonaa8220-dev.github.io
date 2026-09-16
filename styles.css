@@ -235,13 +235,22 @@ a { color: inherit; text-decoration: none; }
 .game-heading { grid-template-columns: minmax(0, 1.15fr) minmax(260px, .45fr); }
 .game-heading h1 { font-size: clamp(3.5rem, 7.2vw, 6.8rem); }
 .game-heading h1 span { color: var(--pink); -webkit-text-stroke: 2px var(--ink); text-shadow: 4px 4px 0 var(--lime); }
+.game-picker { width: min(820px, 100%); display: flex; gap: 10px; margin: 34px auto -18px; }
+.game-picker a { min-height: 42px; display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border: 2px solid var(--ink); color: var(--ink); background: #fff; box-shadow: 3px 3px 0 var(--ink); font-size: .78rem; font-weight: 900; transition: transform .16s, background .16s; }
+.game-picker a:hover, .game-picker a:focus-visible { background: var(--lime); outline: none; transform: translate(-2px, -2px); }
+.game-picker a.is-active { color: #fff; background: var(--blue); }
+.game-picker a span { font: 900 .62rem ui-monospace, SFMono-Regular, Menlo, monospace; opacity: .72; }
 .game-shell { width: min(820px, 100%); margin: 48px auto 0; display: grid; grid-template-columns: minmax(0, 360px) minmax(250px, 1fr); align-items: center; gap: clamp(38px, 7vw, 72px); }
 .arcade-card { width: 100%; padding: 14px; border: 2px solid var(--ink); border-radius: 10px; background: var(--ink); box-shadow: 9px 10px 0 var(--pink); transform: rotate(-.6deg); }
 .game-stats { display: grid; grid-template-columns: 1.35fr 1fr 1fr; gap: 8px; padding: 5px 3px 13px; color: #fff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .66rem; font-weight: 800; letter-spacing: .08em; }
 .game-stats span { display: flex; flex-direction: column; gap: 2px; }
 .game-stats strong { color: var(--lime); font-size: .92rem; letter-spacing: .04em; }
 .game-screen { position: relative; width: min(100%, 300px); margin-inline: auto; overflow: hidden; border: 2px solid var(--ink); background: var(--paper); }
-#tetris { width: 100%; height: auto; display: block; image-rendering: pixelated; }
+#tetris, #suika { width: 100%; height: auto; display: block; touch-action: none; }
+#tetris { image-rendering: pixelated; }
+.suika-card { box-shadow: 9px 10px 0 var(--lime); transform: rotate(.5deg); }
+.suika-screen { cursor: crosshair; background: #fff6d8; }
+.suika-mobile-hint { display: block; margin: 10px 2px 0; color: #fff; text-align: center; font: 800 .66rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .04em; }
 .game-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; background: rgba(255,250,240,.87); backdrop-filter: blur(4px); }
 .game-overlay[hidden] { display: none; }
 .overlay-kicker { margin-bottom: 12px; padding: 6px 9px; border: 2px solid var(--ink); color: #fff; background: var(--blue); box-shadow: 3px 3px 0 var(--ink); font-size: .68rem; font-weight: 900; letter-spacing: .12em; transform: rotate(-2deg); }
