@@ -13,8 +13,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <title>FRAME · 영화 추천을 서비스로 만들기 — EUME.zip</title>
   <link rel="stylesheet" href="../../../shared/site.css">
-  <link rel="stylesheet" href="frame.css?v=20261020-2">
+  <link rel="stylesheet" href="frame.css?v=20261020-3">
   <script src="../../../shared/site.js" defer></script>
+  <script src="gallery.js?v=20261020-1" defer></script>
 </head>
 <body data-page="portfolio">
   <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
@@ -35,7 +36,7 @@
         <p class="frame-kicker">CASE STUDY · RECOMMENDATION SYSTEM</p>
         <h1><span>FRAME</span>좋은 영화에서,<br>내 취향의 영화로.</h1>
         <p class="frame-hero-copy">추천 알고리즘을 공부하는 데서 출발해, 실제로 영화를 찾고 평가할 수 있는 사이트를 만들었습니다. 인기의 근거와 개인 취향의 근거를 구분하고, 추천할 수 없는 순간도 솔직하게 설명하는 것이 이 프로젝트의 기준입니다.</p>
-        <div class="frame-actions"><a class="frame-card-link" href="https://github.com/fonaa8220-dev/movie_recommendation" target="_blank" rel="noopener noreferrer">GitHub에서 코드 보기 ↗</a><a class="frame-secondary" href="#how-it-works">추천 구조 살펴보기 ↓</a></div>
+        <div class="frame-actions"><a class="frame-card-link" href="https://github.com/fonaa8220-dev/movie_recommendation" target="_blank" rel="noopener noreferrer">GitHub에서 코드 보기 ↗</a><a class="frame-secondary" href="#screen-tour">사이트 화면 둘러보기 ↓</a></div>
       </div>
       <dl class="frame-meta">
         <div><dt>PROJECT</dt><dd>개인 프로젝트 · 2026.10<br>기획 → 구현 → 사용성 개선 → 검증</dd></div>
@@ -61,10 +62,32 @@
       </div>
     </section>
 
-    <section class="frame-section" aria-labelledby="screen-title">
+    <section class="frame-section" id="screen-tour" aria-labelledby="screen-title">
       <p class="frame-kicker">02 / THE EXPERIENCE</p>
       <h2 id="screen-title">영화를 찾는 흐름부터 만들었습니다.</h2>
-      <figure class="frame-screen"><img src="../../../assets/projects/frame/recommendations.png" width="1265" height="712" alt="당신이 좋아할 거예요 제목 아래 실제 추천 영화와 다른 추천 선택지가 표시된 FRAME 화면" loading="lazy"><figcaption>실제 개발 화면. 중복된 콘텐츠 추천 버튼을 정리하고, ‘당신이 좋아할 거예요’로 취향 추천을 통합했습니다.</figcaption></figure>
+      <p>처음 방문한 순간부터 영화를 고르기까지, 실제 화면을 순서대로 넘겨볼 수 있습니다.</p>
+      <div class="frame-gallery" data-frame-gallery role="region" aria-roledescription="캐러셀" aria-label="FRAME 주요 화면 둘러보기" tabindex="0">
+        <div class="frame-gallery-tabs" role="group" aria-label="보고 싶은 화면 선택">
+          <button type="button" data-slide="0" aria-pressed="true">01 메인</button>
+          <button type="button" data-slide="1" aria-pressed="false">02 인기 영화</button>
+          <button type="button" data-slide="2" aria-pressed="false">03 장르 탐색</button>
+          <button type="button" data-slide="3" aria-pressed="false">04 취향 설정</button>
+          <button type="button" data-slide="4" aria-pressed="false">05 맞춤 추천</button>
+          <button type="button" data-slide="5" aria-pressed="false">06 영화 상세</button>
+        </div>
+        <figure class="frame-gallery-figure">
+          <a class="frame-gallery-stage" data-gallery-open href="../../../assets/projects/frame/screen-home.jpg" target="_blank" rel="noopener noreferrer" aria-label="메인 화면 이미지 크게 보기">
+            <img data-gallery-image src="../../../assets/projects/frame/screen-home.jpg" width="1265" height="712" alt="대표 영화의 배경과 추천 영화 둘러보기 버튼이 있는 FRAME 첫 화면" loading="lazy" draggable="false">
+          </a>
+          <figcaption aria-live="polite" aria-atomic="true"><strong data-gallery-title>메인 · 첫 방문의 시작</strong><p data-gallery-description>대표 영화와 함께 사이트의 기준을 소개합니다. ‘추천 영화 둘러보기’로 인기 영화부터 탐색할 수 있습니다.</p></figcaption>
+        </figure>
+        <div class="frame-gallery-controls">
+          <button type="button" data-gallery-prev aria-label="이전 화면" disabled>← 이전</button>
+          <span data-gallery-count aria-label="전체 6개 화면 중 1번째">01 / 06</span>
+          <button type="button" data-gallery-next aria-label="다음 화면">다음 →</button>
+        </div>
+        <p class="frame-gallery-hint">버튼·좌우 방향키로 넘길 수 있어요. 모바일에서는 좌우로 밀어보세요. 이미지를 누르면 크게 열립니다.</p>
+      </div>
       <ul>
         <li><strong>탐색:</strong> 전체 인기·장르별 인기·제목 검색·영화 상세·최근 5년 개봉작을 탐색합니다.</li>
         <li><strong>취향 입력:</strong> 좋아요, 0.5~5점의 내 별점, 관심 없음을 각각 다른 행동으로 기록합니다.</li>
