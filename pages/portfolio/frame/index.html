@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TMDB 영화 4,500편과 방문자 별점을 연결한 FRAME 영화 추천 사이트. 추천 알고리즘, SOLID 구조, 문제 해결과 33개 테스트를 기록했습니다.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:title" content="FRAME — 영화 추천을 서비스로 만들기 | EUME.zip">
+  <meta property="og:description" content="인기 영화에서 내 취향의 영화까지. 데이터와 추천 근거를 구분하며 만든 영화 추천 프로젝트.">
+  <meta property="og:image" content="https://fonaa8220-dev.github.io/assets/projects/frame/recommendations.png">
+  <meta property="og:image:alt" content="FRAME의 개인 취향 추천 화면">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>FRAME · 영화 추천을 서비스로 만들기 — EUME.zip</title>
+  <link rel="stylesheet" href="../../../shared/site.css">
+  <link rel="stylesheet" href="frame.css?v=20261020-2">
+  <script src="../../../shared/site.js" defer></script>
+</head>
+<body data-page="portfolio">
+  <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+  <div class="page-grid" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="../../../index.html" aria-label="홈으로 이동"><span class="brand-mark" aria-hidden="true">E</span><span>EUME<span class="brand-dot">.</span>zip</span></a>
+    <nav class="tabs" aria-label="주요 메뉴">
+      <a class="tab" href="../../../pages/about/index.html" data-route="about">자기소개</a>
+      <a class="tab" href="../index.html" data-route="portfolio">포폴 소개</a>
+      <a class="tab" href="../../../games/tetris/index.html" data-route="tetris">쉬어가세요^^</a>
+      <a class="tab" href="../../../pages/guestbook/index.html" data-route="guestbook">방명록</a>
+    </nav>
+  </header>
+  <main class="subpage frame-case" id="main-content">
+    <a class="frame-breadcrumb" href="../index.html">← PROJECT FILES</a>
+    <header class="frame-hero">
+      <div>
+        <p class="frame-kicker">CASE STUDY · RECOMMENDATION SYSTEM</p>
+        <h1><span>FRAME</span>좋은 영화에서,<br>내 취향의 영화로.</h1>
+        <p class="frame-hero-copy">추천 알고리즘을 공부하는 데서 출발해, 실제로 영화를 찾고 평가할 수 있는 사이트를 만들었습니다. 인기의 근거와 개인 취향의 근거를 구분하고, 추천할 수 없는 순간도 솔직하게 설명하는 것이 이 프로젝트의 기준입니다.</p>
+        <div class="frame-actions"><a class="frame-card-link" href="https://github.com/fonaa8220-dev/movie_recommendation" target="_blank" rel="noopener noreferrer">GitHub에서 코드 보기 ↗</a><a class="frame-secondary" href="#how-it-works">추천 구조 살펴보기 ↓</a></div>
+      </div>
+      <dl class="frame-meta">
+        <div><dt>PROJECT</dt><dd>개인 프로젝트 · 2026.10<br>기획 → 구현 → 사용성 개선 → 검증</dd></div>
+        <div><dt>STACK</dt><dd>Python 3.12 · FastAPI · SQLite<br>HTML · CSS · JavaScript<br>scikit-learn · scikit-surprise</dd></div>
+        <div><dt>DATA</dt><dd>TMDB 영화 정보·관객 평점<br>사이트 방문자가 직접 남긴 별점</dd></div>
+        <div><dt>STATUS</dt><dd>로컬 실행 구현 완료<br>공개 서비스 배포 전 · 개발 기록</dd></div>
+      </dl>
+    </header>
+    <div class="frame-stats" aria-label="구현 및 검증 규모">
+      <div class="frame-stat"><strong>4,500</strong><span>TMDB 영화 카탈로그<br>최근 5년 개봉작 2,978편 포함</span></div>
+      <div class="frame-stat"><strong>5</strong><span>추천 방식 구현<br>인기·콘텐츠·사용자·아이템·잠재요인</span></div>
+      <div class="frame-stat"><strong>33</strong><span>자동 테스트 통과<br>추천·평가 저장·실행·수집·구조 검증</span></div>
+    </div>
+    <p class="frame-asof">2026년 10월 20일 개발 환경에서 확인한 수치입니다. 추천 품질이나 이용자 수를 뜻하는 지표는 아닙니다.</p>
+
+    <section class="frame-section" aria-labelledby="problem-title">
+      <p class="frame-kicker">01 / THE QUESTION</p>
+      <h2 id="problem-title">평점이 높으면, 인기 있는 영화일까?</h2>
+      <p>몇 명만 평가한 9점짜리 영화와 수만 명이 평가한 8점짜리 영화를 단순 평균만으로 비교하기는 어렵습니다. 첫 화면에서는 <strong>평점과 평가 수를 함께 고려한 영화</strong>를 보여주고, 취향을 알려주면 개인화된 추천으로 이어지는 흐름을 설계했습니다.</p>
+      <div class="frame-grid">
+        <div class="frame-note"><p class="frame-label">첫 방문</p><h3>취향 정보가 없어도 시작할 수 있게</h3><p>전체 인기 영화와 장르별 인기 영화를 먼저 제공합니다. 추천받기 전에 복잡한 가입이나 알고리즘 선택을 요구하지 않습니다.</p></div>
+        <div class="frame-note"><p class="frame-label">취향이 쌓이면</p><h3>왜 추천하는지 알 수 있게</h3><p>좋아요와 직접 남긴 별점으로 추천을 만들고, 카드에 실제 추천 근거를 표시합니다. 데이터가 부족한 기능에는 준비 상태를 안내합니다.</p></div>
+      </div>
+    </section>
+
+    <section class="frame-section" aria-labelledby="screen-title">
+      <p class="frame-kicker">02 / THE EXPERIENCE</p>
+      <h2 id="screen-title">영화를 찾는 흐름부터 만들었습니다.</h2>
+      <figure class="frame-screen"><img src="../../../assets/projects/frame/recommendations.png" width="1265" height="712" alt="당신이 좋아할 거예요 제목 아래 실제 추천 영화와 다른 추천 선택지가 표시된 FRAME 화면" loading="lazy"><figcaption>실제 개발 화면. 중복된 콘텐츠 추천 버튼을 정리하고, ‘당신이 좋아할 거예요’로 취향 추천을 통합했습니다.</figcaption></figure>
+      <ul>
+        <li><strong>탐색:</strong> 전체 인기·장르별 인기·제목 검색·영화 상세·최근 5년 개봉작을 탐색합니다.</li>
+        <li><strong>취향 입력:</strong> 좋아요, 0.5~5점의 내 별점, 관심 없음을 각각 다른 행동으로 기록합니다.</li>
+        <li><strong>팝업 안에서 확인:</strong> 장르를 고르면 팝업 안에 추천 영화가 나타납니다. 선택할 때 화면을 자동으로 아래로 이동시키지 않습니다.</li>
+        <li><strong>저장과 취소:</strong> 팝업은 저장 버튼을 눌러야 확정되고, 닫기·Esc·바깥 클릭은 임시 입력을 취소합니다.</li>
+      </ul>
+    </section>
+
+    <section class="frame-section" aria-labelledby="data-title">
+      <p class="frame-kicker">03 / DATA DESIGN</p>
+      <h2 id="data-title">영화의 평점과 사람의 취향은 다른 데이터입니다.</h2>
+      <p>TMDB의 평균 평점은 한 영화에 대한 집계 값입니다. 이것만으로는 “누가 어떤 영화를 함께 좋아했는가”를 알 수 없습니다. 영화 정보와 개인별 평가를 분리해 추천에 사용하는 역할을 명확하게 정했습니다.</p>
+      <div class="frame-table-wrap"><table><thead><tr><th scope="col">데이터</th><th scope="col">출처와 저장</th><th scope="col">사용 목적</th></tr></thead><tbody>
+        <tr><td>영화 정보·관객 평점</td><td>TMDB → 영화 카탈로그 SQLite<br>평균 평점 10점 만점·평가 수·장르·줄거리</td><td>인기 순위와 콘텐츠 유사도</td></tr>
+        <tr><td>개인별 직접 별점</td><td>사이트 방문자 → 별도 프로필 SQLite<br>프로필별 TMDB 영화 ID와 0.5~5점 평가</td><td>사용자·아이템·잠재요인 추천</td></tr>
+        <tr><td>좋아요·선호 장르</td><td>브라우저에 보관<br>좋아요와 별점은 별개 입력</td><td>개인 취향의 기준과 장르 탐색</td></tr>
+      </tbody></table></div>
+      <p>운영 사이트는 TMDB 영화와 실제 방문자 평가만 사용합니다. MovieLens 노트북은 알고리즘을 공부한 참고 자료이며 운영 모델의 입력으로 연결하지 않았습니다. 브라우저에는 프로필 연결 토큰을 보관하고, 서버에는 토큰의 해시를 저장합니다.</p>
+      <p>최근 개봉작은 연도별로 조회한 뒤 TMDB ID로 중복을 합쳤습니다. 비성인·개봉 완료·평가 100개 이상 조건을 적용하고, 수집이 모두 끝난 뒤 기존 카탈로그에 반영해 중간 실패로 데이터를 잃지 않게 했습니다.</p>
+    </section>
+
+    <section class="frame-section" id="how-it-works" aria-labelledby="logic-title">
+      <p class="frame-kicker">04 / RECOMMENDATION LOGIC</p>
+      <h2 id="logic-title">데이터가 있는 만큼 추천합니다.</h2>
+      <div class="frame-flow" aria-label="TMDB 정보와 방문자 평가가 각각 추천 계산에 입력되고, 결과 처리에서 합쳐지는 구조">
+        <div class="frame-flow-column"><div class="frame-flow-box"><strong>TMDB 영화 정보</strong><span>평균 평점 · 평가 수<br>장르 · 줄거리 · 개봉일</span></div><div class="frame-flow-box"><strong>방문자 취향과 평가</strong><span>좋아요 · 선호 장르<br>프로필별 영화 별점</span></div></div>
+        <span class="frame-flow-arrow" aria-hidden="true">→</span>
+        <div class="frame-flow-column"><div class="frame-flow-box"><strong>인기·콘텐츠 추천</strong><span>평점의 평가 수 보정<br>장르와 줄거리의 유사도</span></div><div class="frame-flow-box"><strong>협업 필터링·잠재요인</strong><span>비슷한 사용자 · 함께 평가한 영화<br>저장된 실제 평가로 SVD 학습</span></div></div>
+        <div class="frame-flow-output"><strong>↓ 공통 결과 처리 ↓</strong><span>평가한 영화·좋아요·관심 없음·중복 제외 → 실제 근거 표시<br>후보가 부족하면 보완 / 선택한 추천이 불가능하면 전용 안내</span></div>
+      </div>
+      <div class="frame-table-wrap"><table><thead><tr><th scope="col">추천 방식</th><th scope="col">구현한 계산</th><th scope="col">필요한 근거</th></tr></thead><tbody>
+        <tr><td>인기 기반</td><td>전체 평균으로 보정한 가중 평점. 평가가 적은 고평점의 과대평가를 줄입니다.</td><td>TMDB 평균 평점과 평가 수</td></tr>
+        <tr><td>콘텐츠 기반</td><td>장르 벡터와 줄거리 문자 n-gram TF-IDF의 코사인 유사도를 0.4 : 0.6으로 결합합니다.</td><td>좋아요 또는 직접 4점 이상 준 영화</td></tr>
+        <tr><td>사용자 기반</td><td>사용자 평균을 보정한 평가 벡터의 코사인 유사도로 이웃을 비교합니다.</td><td>여러 방문자의 공통 영화 평가</td></tr>
+        <tr><td>아이템 기반</td><td>공통 평가자의 Pearson 상관계수를 사용하고, 공통 평가 수에 따라 유사도를 보정합니다.</td><td>여러 사람이 함께 평가한 영화</td></tr>
+        <tr><td>잠재요인 기반</td><td>scikit-surprise의 SVD로 사용자·영화 요인을 학습하고 예상 별점을 계산합니다.</td><td>학습 가능한 실제 평가와 저장된 프로필</td></tr>
+      </tbody></table></div>
+      <p class="frame-formula">인기 점수 = (평가 수 × 영화 평균 평점 + 1,000 × 전체 평균 평점) / (평가 수 + 1,000)</p>
+      <p>‘당신이 좋아할 거예요’는 콘텐츠 추천을 우선 사용하고, 후보가 부족하면 선택 장르의 인기 → 전체 인기 순으로 보완합니다. 사용자·아이템·잠재요인 추천을 직접 골랐는데 근거가 부족하면, 다른 인기 목록을 그 알고리즘의 결과인 것처럼 표시하지 않습니다.</p>
+      <p>SVD는 scikit-learn과 별개의 라이브러리인 <strong>scikit-surprise</strong>를 사용합니다. 학습 시점 이후 바뀐 평가나 학습에 없는 프로필에는 이전 사용자 요인을 그대로 적용하지 않습니다.</p>
+    </section>
+
+    <section class="frame-section" aria-labelledby="iteration-title">
+      <p class="frame-kicker">05 / WHAT I FIXED</p>
+      <h2 id="iteration-title">계산이 되는 것과, 이해되는 것은 달랐습니다.</h2>
+      <div class="frame-grid">
+        <article class="frame-note"><p class="frame-label">문제 01 · 같은 영화가 반복되는 선택지</p><h3>준비되지 않은 추천을 구분했습니다.</h3><p>개인별 평가가 부족할 때 각 버튼이 같은 인기 목록을 반환해 추천 방식의 차이를 알기 어려웠습니다. 사용 가능 여부와 준비 안내를 응답에 담고, 대체 목록을 <code>fallback_items</code>로 분리했습니다.</p></article>
+        <article class="frame-note"><p class="frame-label">문제 02 · 취향 기준까지 사라진 제외 처리</p><h3>기준 영화와 결과 제외를 분리했습니다.</h3><p>별점을 준 영화를 결과에서 빼면서 콘텐츠 추천의 입력에서도 지우는 오류가 있었습니다. 높은 별점의 영화는 유사도 계산에 참여하고 결과에서만 빠지도록 수정했습니다. 테스트에서 실제 유사도와 추천 이유를 확인했습니다.</p></article>
+        <article class="frame-note"><p class="frame-label">문제 03 · 알고리즘 이름이 앞서는 화면</p><h3>사용자가 얻는 가치로 이름을 바꿨습니다.</h3><p>‘사용자 기반’ 대신 ‘비슷한 취향의 선택’, ‘잠재요인’ 대신 ‘새로운 발견’으로 표현했습니다. 기준이 거의 같던 기본·콘텐츠 추천 버튼도 하나로 합쳤습니다.</p></article>
+        <article class="frame-note"><p class="frame-label">문제 04 · 팝업 밖에서 바뀌는 추천</p><h3>선택과 확인이 한 화면에서 이어지게 했습니다.</h3><p>장르 선택 결과를 팝업 안에서 보여주고 자동 스크롤을 제거했습니다. 저장 전 임시 입력과 저장된 취향도 분리해 닫기와 저장의 동작을 예측할 수 있게 했습니다.</p></article>
+      </div>
+    </section>
+
+    <section class="frame-section" aria-labelledby="architecture-title">
+      <p class="frame-kicker">06 / SIMPLE, REPLACEABLE CODE</p>
+      <h2 id="architecture-title">SOLID를 작은 규약과 함수로 적용했습니다.</h2>
+      <div class="frame-architecture" aria-label="API, 서비스, 추천 전략, 실제 의존성 연결의 네 역할">
+        <div class="frame-flow-box"><small>01 · HTTP</small><strong>web.py</strong><span>입력 검증 · 프로필 확인<br>서비스 호출 · HTTP 응답</span></div>
+        <div class="frame-flow-box"><small>02 · SERVICE</small><strong>personalize.py</strong><span>후보 정리 · 중복 제외<br>대체 추천 · 공통 응답</span></div>
+        <div class="frame-flow-box"><small>03 · STRATEGY</small><strong>strategies.py</strong><span>방식별 후보와 준비 안내<br>같은 Selection 규약</span></div>
+        <div class="frame-flow-box"><small>04 · WIRING</small><strong>wiring.py</strong><span>추천 방식 등록<br>모델 로더 · 저장소 연결</span></div>
+      </div>
+      <ul>
+        <li><strong>단일 책임:</strong> 계산, 공통 결과 처리, 실제 구현 연결의 변경 이유를 나눴습니다.</li>
+        <li><strong>개방·폐쇄:</strong> 새 추천 함수는 등록 목록에 추가합니다. 서비스의 큰 조건문을 늘리지 않습니다.</li>
+        <li><strong>리스코프 치환:</strong> 모든 추천 함수가 같은 요청과 <code>Selection</code> 반환 규약을 따릅니다.</li>
+        <li><strong>인터페이스 분리:</strong> 추천 함수와 프로필 저장소의 작은 규약을 분리했습니다.</li>
+        <li><strong>의존성 역전:</strong> 모델 로더와 저장소를 주입합니다. API 테스트에서는 SQLite를 메모리 저장소로 바꿀 수 있습니다.</li>
+      </ul>
+      <p><a href="https://github.com/fonaa8220-dev/movie_recommendation/blob/master/docs/SOLID_%EA%B5%AC%EC%A1%B0.md" target="_blank" rel="noopener noreferrer">구조도와 원칙별 적용 근거 보기 ↗</a></p>
+    </section>
+
+    <section class="frame-section" aria-labelledby="validation-title">
+      <p class="frame-kicker">07 / VALIDATION &amp; LIMITS</p>
+      <h2 id="validation-title">동작 검증과 추천 품질 평가를 구분했습니다.</h2>
+      <ul class="frame-checks"><li>가중 평점·콘텐츠 추천·결과 제외</li><li>실제 평가 형태의 사용자·아이템·SVD 경로</li><li>프로필 격리·별점 검증·임시 입력 미저장</li><li>변경된 평가의 오래된 SVD 결과 차단</li><li>수집·모델 저장 실패 시 기존 파일 보존</li><li>새 추천 방식·모델 로더·저장소 교체</li></ul>
+      <p>자동 테스트 <strong>33개</strong>를 통과했고, 개발 서버에서 여섯 추천 API 경로(기본·콘텐츠·최근 개봉·사용자·아이템·SVD)를 확인했습니다. 테스트 예제와 모델은 임시 저장소에 두고 운영 평가에 섞지 않았습니다. 브라우저에서는 팝업 입력 취소, 장르 선택 시 스크롤 유지, 모바일 가로 넘침을 확인했습니다.</p>
+      <div class="frame-note"><h3>현재의 한계</h3><p>여러 사람의 직접 평가가 충분하지 않아 협업·잠재요인 추천의 실제 품질은 아직 평가하지 않았습니다. 테스트 통과는 추천 정확도를 의미하지 않으므로 RMSE나 적중률을 성과로 제시하지 않습니다. 다음 검증은 실제 평가가 쌓인 뒤 학습·검증 데이터를 나누고 인기 추천과 비교하는 것입니다.</p></div>
+      <p>로그인과 기기 간 동기화는 구현 범위에 포함하지 않았습니다. 브라우저의 프로필 연결 정보가 사라지면 기존 평가로 자동 복구되지 않습니다. 외부 공개 서비스 배포도 후속 과제입니다.</p>
+    </section>
+
+    <section class="frame-section" aria-labelledby="closing-title">
+      <p class="frame-kicker">08 / WHAT I LEARNED</p>
+      <h2 id="closing-title">추천은 점수 다음의 경험까지 이어집니다.</h2>
+      <p>이 프로젝트에서 크게 배운 것은 알고리즘의 종류보다 <strong>어떤 데이터가 그 추천을 뒷받침하는지</strong> 먼저 확인해야 한다는 점입니다. 영화의 평균 평점과 개인의 별점을 구분하고, 데이터가 부족한 상황을 설명하고, 사용자가 이해할 수 있는 선택지를 만드는 일도 추천 시스템의 일부였습니다.</p>
+      <p>VS Code와 Codex를 활용해 구현과 검증을 반복했습니다. 기능이 돌아가는 것에서 멈추지 않고, 실제 사용 중 드러난 입력·화면·데이터 흐름의 문제를 고친 과정을 함께 기록했습니다.</p>
+      <details><summary>로컬에서 실행해 보기</summary><p>저장소의 README에 따라 Python·uv 환경과 본인의 TMDB 인증 정보를 준비합니다. <code>.env</code>와 운영 데이터는 Git에서 제외했습니다.</p><pre><code>git clone https://github.com/fonaa8220-dev/movie_recommendation.git
+cd movie_recommendation
+uv sync --frozen
+# .env에 본인의 TMDB 인증 정보 설정
+uv run recommended-system collect --target 2000
+uv run recommended-system launch</code></pre><p>Windows에서는 환경과 인증 정보를 준비한 뒤 <code>run.bat</code>로 실행할 수 있습니다. 이 정적 블로그는 프로젝트 소개를 제공하며 Python 서버 실행은 별도입니다.</p></details>
+      <p class="frame-asof">영화 정보와 화면 속 포스터의 출처: <a href="https://www.themoviedb.org" target="_blank" rel="noopener noreferrer">TMDB</a>. This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+    </section>
+    <div class="frame-bottom"><a class="text-button" href="../index.html">← 다른 프로젝트 보기</a></div>
+  </main>
+  <footer class="site-footer"><span>© <span data-year></span> fonaa8220</span><a href="../../../index.html">홈으로 돌아가기</a></footer>
+</body>
+</html>
