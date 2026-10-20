@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="울산 공공자전거 배치 후보지 탐색. 자전거도로·버스정류장·인구 자료를 정리하고, 그래프와 지도로 시범 운영 후보 생활권을 제안한 데이터 분석 프로젝트입니다.">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:title" content="울산 공공자전거 배치 후보지 분석 | EUME.zip">
+  <meta property="og:description" content="자전거도로에서 버스정류장까지. 공공데이터로 살펴본 울산의 이동과 시범 운영 후보지.">
+  <meta property="og:image" content="https://fonaa8220-dev.github.io/assets/projects/bicycle/road-density.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>울산 공공자전거 · 배치 후보지 분석 — EUME.zip</title>
+  <link rel="stylesheet" href="../../../shared/site.css">
+  <link rel="stylesheet" href="bicycle.css?v=20261020-1">
+  <script src="../../../shared/site.js" defer></script>
+  <script src="maps.js" defer></script>
+</head>
+<body data-page="portfolio">
+  <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+  <div class="page-grid" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="../../../index.html" aria-label="홈으로 이동"><span class="brand-mark" aria-hidden="true">E</span><span>EUME<span class="brand-dot">.</span>zip</span></a>
+    <nav class="tabs" aria-label="주요 메뉴">
+      <a class="tab" href="../../about/index.html" data-route="about">자기소개</a>
+      <a class="tab" href="../index.html" data-route="portfolio">포폴 소개</a>
+      <a class="tab" href="../../../games/tetris/index.html" data-route="tetris">쉬어가세요^^</a>
+      <a class="tab" href="../../guestbook/index.html" data-route="guestbook">방명록</a>
+    </nav>
+  </header>
+  <main class="subpage bike-case" id="main-content">
+    <a class="bike-back" href="../index.html">← PROJECT FILES</a>
+    <header class="bike-hero">
+      <div>
+        <p class="bike-kicker">CASE STUDY · LOCAL DATA LAB</p>
+        <span class="bike-sticker">🚲 ULSAN / PUBLIC BIKE</span>
+        <h1>공공자전거를 놓는다면,<br>울산 어디부터?</h1>
+        <p class="bike-hero-copy">도시의 이동을 데이터로 읽어보고 싶었습니다. 자전거도로의 규모를 비교하고, 버스정류장과 인구를 지도에 연결해 공공자전거 시범 운영을 검토할 생활권을 찾아봤습니다.</p>
+      </div>
+      <dl class="bike-meta">
+        <div><dt>PROJECT</dt><dd>김정음 · 개인 데이터 분석<br>문제 정의 → 정리 → 시각화 → 제안</dd></div>
+        <div><dt>STACK</dt><dd>Python · Pandas · Matplotlib<br>GeoPandas · Folium · Jupyter</dd></div>
+        <div><dt>DATA / STATUS</dt><dd>2023·2025년 공공자료<br>탐색적 분석 · 시범 운영 후보 제안</dd></div>
+      </dl>
+    </header>
+    <div class="bike-stats" aria-label="분석에서 확인한 주요 수치">
+      <div class="bike-stat"><strong>878.71</strong><span>울산 자전거도로 총연장 · km<br>2023년 기준 / 겸용도로 포함</span></div>
+      <div class="bike-stat"><strong>7 / 17</strong><span>인구 대비 자전거도로 길이 순위<br>전국 시·도 / 2023년 자료</span></div>
+      <div class="bike-stat"><strong>2 MAPS</strong><span>직접 살펴보는 지도<br>정류장 분포 · 구·군별 인구밀도</span></div>
+    </div>
+    <p class="bike-caption">기존 분석 노트북의 결과를 정리했습니다. 자료의 기준 시점은 서로 다르며, 현재 시설 현황이나 실제 이용 수요를 나타내는 수치는 아닙니다.</p>
+    <nav class="bike-nav" aria-label="분석 목차"><a href="#question">시작한 질문</a><a href="#data">데이터와 과정</a><a href="#findings">그래프로 보기</a><a href="#maps">지도로 보기</a><a href="#proposal">후보지 제안</a><a href="#limits">배운 점과 다음 단계</a></nav>
+
+    <section class="bike-section" id="question" aria-labelledby="question-title">
+      <p class="bike-kicker">01 / THE QUESTION</p>
+      <h2 id="question-title">정류장에서 목적지까지,<br>자전거가 이어줄 수 있을까?</h2>
+      <p>“울산에 공공자전거를 도입한다면 어디부터 시작하면 좋을까?”라는 질문에서 출발했습니다. 버스정류장과 주변 생활권을 연결하는 짧은 이동에 주목하고, 지역을 비교할 기준부터 정했습니다.</p>
+      <div class="bike-grid">
+        <div class="bike-note"><span class="bike-label">도시 전체를 볼 때</span><h3>도로가 얼마나 준비되어 있을까?</h3><p>지역마다 인구 규모가 다릅니다. 자전거도로의 총연장뿐 아니라 인구 10만 명당 길이를 계산해 전국 시·도를 비교했습니다.</p></div>
+        <div class="bike-note"><span class="bike-label">생활권을 볼 때</span><h3>버스와 연결할 지점은 어디일까?</h3><p>정류장 좌표를 행정구역에 연결하고 면적·인구 대비 밀도를 살폈습니다. 정류장 수를 실제 승하차 인원으로 해석하지 않는 것을 기준으로 삼았습니다.</p></div>
+      </div>
+    </section>
+
+    <section class="bike-section" id="data" aria-labelledby="data-title">
+      <p class="bike-kicker">02 / DATA &amp; PROCESS</p>
+      <h2 id="data-title">단위와 지역 이름을 맞추는 일부터.</h2>
+      <div class="bike-table-wrap"><table><thead><tr><th scope="col">자료</th><th scope="col">기준 시점과 출처</th><th scope="col">분석에서의 역할</th></tr></thead><tbody>
+        <tr><td>자전거도로 현황</td><td>2023년 · 행정안전부 「자전거 이용 현황」<br>원문 이미지를 전사한 제공 Excel</td><td>시·도별 노선 수와 연장 비교</td></tr>
+        <tr><td>인구주택총조사</td><td>2023년 · 통계청 등록센서스 통계표</td><td>시·도별 인구로 도로 길이 보정</td></tr>
+        <tr><td>전국 버스정류장 위치</td><td>국토교통부 · 2025.10.31 파일</td><td>울산 좌표 추출, 행정구역별 정류장 집계</td></tr>
+        <tr><td>울산 인구 현황</td><td>울산광역시 · 2025.11.12 파일</td><td>남녀 내국인 합산, 구·군별 밀도 비교</td></tr>
+        <tr><td>행정구역 경계</td><td>admdongkor · 2025.10.01 기준</td><td>좌표와 경계의 공간 결합, 면적 계산</td></tr>
+      </tbody></table></div>
+      <ol class="bike-flow" aria-label="분석 흐름">
+        <li><strong>읽고 정리하기</strong>Excel·CSV 읽기<br>지역명 대응 · 문자 인코딩 확인</li>
+        <li><strong>같은 기준 만들기</strong>도로 길이 ÷ 인구<br>정류장 수 ÷ 면적·인구</li>
+        <li><strong>지도에 연결하기</strong>좌표와 행정구역 공간 결합<br>지역별 집계 · 그래프·지도</li>
+        <li><strong>후보 생활권 제안</strong>분석 관찰 + 지역 맥락<br>현장 확인과 시범 운영 제안</li>
+      </ol>
+      <p>시·도의 긴 이름과 약칭을 대응시키고 CSV의 CP949 인코딩을 확인했습니다. 정류장 좌표는 행정구역 경계 안에 있는지 공간 결합으로 판별했습니다. 구·군과 동별 정류장 수 비교에서는 정류장 번호의 고유 개수를 사용했습니다.</p>
+      <p class="bike-caption">분모도 구분했습니다. 전국 비교에는 2023년 총조사 인구를, 울산 내부 비교에는 2025년 자료의 내국인 수를 사용했습니다. 두 인구 수치는 같은 모집단·시점의 값이 아닙니다.</p>
+    </section>
+
+    <section class="bike-section" id="findings" aria-labelledby="findings-title">
+      <p class="bike-kicker">03 / FINDINGS</p>
+      <h2 id="findings-title">같은 도시도, 나누는 기준에 따라 다르게 보입니다.</h2>
+      <h3>① 인구에 비해 도로의 총길이는 어느 정도일까?</h3>
+      <p>울산의 자전거도로 총연장 878.71km를 2023년 인구 1,107,432명으로 나누면 <strong>인구 10만 명당 약 79.3km</strong>입니다. 비교한 17개 시·도 중 7위였습니다. 다만 이 길이에는 자전거·보행자 겸용도로가 포함되어 있어, 연속된 전용도로의 길이나 주행 안전성을 뜻하지는 않습니다.</p>
+      <figure class="bike-chart"><a href="../../../assets/projects/bicycle/road-density.png" target="_blank" rel="noopener noreferrer" aria-label="전국 인구 대비 자전거도로 길이 그래프 크게 보기"><img src="../../../assets/projects/bicycle/road-density.png" width="990" height="690" loading="lazy" alt="17개 시도 인구 10만 명당 자전거도로 길이 비교. 울산은 약 79.3km로 7위이며 제주가 191.8km로 가장 높다."></a><figcaption><strong>규모가 다른 지역을 인구 기준으로 비교했습니다.</strong>2023년 자전거도로 총연장 ÷ 같은 해 인구 × 100,000. 그래프를 누르면 원본을 크게 볼 수 있습니다.</figcaption></figure>
+      <h3>② 인구 대비 정류장이 많으면, 촘촘한 지역일까?</h3>
+      <p>울주군은 인구 10만 명당 정류장 수가 <strong>737.18개</strong>로 높게 나왔습니다. 하지만 넓은 면적에 분산된 정류장일 수 있습니다. 인구 대비 지표만 보고 거점 간 거리가 가깝다고 판단하지 않고, 면적당 밀도를 함께 확인했습니다.</p>
+      <figure class="bike-chart"><a href="../../../assets/projects/bicycle/stops-per-population.png" target="_blank" rel="noopener noreferrer" aria-label="구군별 인구 대비 버스정류장 수 그래프 크게 보기"><img src="../../../assets/projects/bicycle/stops-per-population.png" width="990" height="590" loading="lazy" alt="울산 인구 10만 명당 버스정류장 수. 울주군 737.18, 북구 241.55, 동구 237.34, 남구 219.75, 중구 207.73개."></a><figcaption><strong>정류장 수 ÷ 내국인 인구 × 100,000</strong>2025년 정류장·인구 자료를 결합했습니다. 정류장 수는 이용객 수나 환승 수요와 다릅니다.</figcaption></figure>
+      <div class="bike-grid">
+        <div class="bike-note"><span class="bike-label">면적당 밀도 / 관찰</span><h3>전하2동 42.35개/km²<br>화정동 35.29개/km²</h3><p>분석에 포함된 읍·면·동 가운데 정류장 밀도가 가장 높았던 두 지역입니다. 중앙동도 30.13개/km²로 상위권이었습니다.</p></div>
+        <div class="bike-note"><span class="bike-label">해석 / 추가 확인 필요</span><h3>촘촘한 정류장 사이의 짧은 이동</h3><p>버스와 자전거를 연결하는 후보로 검토할 수 있습니다. 실제 이동 수요가 있는지는 승하차 자료와 현장 동선을 더 확인해야 합니다.</p></div>
+      </div>
+      <details><summary>읍·면·동별 정류장 밀도 전체 그래프 보기</summary><figure class="bike-chart bike-tall-chart"><a href="../../../assets/projects/bicycle/stops-per-area.png" target="_blank" rel="noopener noreferrer" aria-label="동별 정류장 밀도 전체 그래프 크게 보기"><img src="../../../assets/projects/bicycle/stops-per-area.png" loading="lazy" alt="울산 읍면동별 버스정류장 밀도를 면적당 개수로 정렬한 전체 그래프. 전하2동과 화정동이 상위에 있고 울주군 삼동면과 두서면이 하위에 있다."></a><figcaption>정류장 번호의 고유 개수 ÷ 행정구역 면적(km²). 원 분석은 면적을 소수 둘째 자리로 반올림한 뒤 계산했습니다. 작은 구역은 이 반올림의 영향을 받을 수 있습니다.</figcaption></figure></details>
+    </section>
+
+    <section class="bike-section" id="maps" aria-labelledby="maps-title">
+      <p class="bike-kicker">04 / EXPLORE THE MAPS</p>
+      <h2 id="maps-title">숫자에서 위치로, 직접 살펴보기.</h2>
+      <p>노트북에서 만든 지도를 그대로 웹에서 열어볼 수 있게 옮겼습니다. 아래 항목을 펼친 뒤 확대하거나 지도의 표시를 눌러보세요.</p>
+      <details><summary>01 버스정류장 분포 지도 열기 · 읍·면·동별 비교</summary><p>색으로 지역별 정류장 빈도를, 점으로 개별 정류장 위치를 보여줍니다. 오른쪽 위에서 레이어를 켜고 끌 수 있고, 점을 누르면 이름을 확인할 수 있습니다. 이 지도의 색상은 공간 결합된 정류장 행의 빈도입니다.</p><iframe class="bike-map" data-src="../../../assets/projects/bicycle/bus-map.html" title="울산 읍면동별 버스정류장 분포 인터랙티브 지도" loading="lazy"></iframe><a class="bike-map-link" href="../../../assets/projects/bicycle/bus-map.html" target="_blank" rel="noopener noreferrer">지도를 새 탭에서 크게 보기 ↗</a></details>
+      <details><summary>02 인구밀도 지도 열기 · 구·군별 비교</summary><p>원의 면적이 클수록 구·군의 내국인 인구밀도가 높습니다. 원은 구·군을 대표하는 중심점에 표시되며, 해당 위치의 실제 인구 분포를 뜻하지는 않습니다. 원에 마우스를 올리거나 터치해 수치를 확인할 수 있습니다.</p><iframe class="bike-map" data-src="../../../assets/projects/bicycle/population-map.html" title="울산 구군별 내국인 인구밀도 인터랙티브 지도" loading="lazy"></iframe><a class="bike-map-link" href="../../../assets/projects/bicycle/population-map.html" target="_blank" rel="noopener noreferrer">지도를 새 탭에서 크게 보기 ↗</a></details>
+      <p class="bike-caption">지도 배경: OpenStreetMap 기여자 · 표시 도구: Folium / Leaflet. 배경지도와 라이브러리는 인터넷 연결이 필요합니다. 정류장 지도는 약 5.5MB이며 처음 열 때 시간이 걸릴 수 있습니다.</p>
+    </section>
+
+    <section class="bike-section" id="proposal" aria-labelledby="proposal-title">
+      <p class="bike-kicker">05 / PILOT PROPOSAL</p>
+      <h2 id="proposal-title">먼저 연결해 볼 생활권을 제안했습니다.</h2>
+      <p>원 분석의 제안 순서는 아래와 같습니다. <strong>밀도 분석과 지역 맥락을 바탕으로 정한 검토 순서</strong>이며, 수요 예측이나 최적화 모델이 산출한 순위는 아닙니다.</p>
+      <div class="bike-table-wrap"><table><thead><tr><th scope="col">검토 순서</th><th scope="col">후보 생활권</th><th scope="col">제안 근거와 확인할 점</th></tr></thead><tbody>
+        <tr><td>01</td><td>중앙동·삼산동·태화강 생활권</td><td>중앙동의 높은 정류장 밀도를 출발점으로, 도심과 강변을 연결하는 구상입니다. 실제 환승 동선과 자전거도로 연결을 확인해야 합니다.</td></tr>
+        <tr><td>02</td><td>무거동·대현동</td><td>정류장 밀도가 높은 생활권입니다. 주거지·학교·상업시설 사이의 짧은 이동 수요를 추가 조사할 후보입니다.</td></tr>
+        <tr><td>03</td><td>전하2동·화정동</td><td>면적당 정류장 밀도 상위 두 지역입니다. 근거리 이동과 버스 연계 가능성을 현장에서 확인할 후보입니다.</td></tr>
+      </tbody></table></div>
+      <div class="bike-note bike-proposal"><span class="bike-label">운영 가설</span><h3>작게 운영하고, 실제 이동으로 다시 판단하기.</h3><p>여러 무인 대여·반납 거점을 생활권 안에 연결하고 24시간 운영을 검토합니다. 시범 운영 이후 대여·반납 건수, 시간대별 이용량, 자전거 재배치 부담을 확인해 거점과 대수를 조정하는 방향을 제안했습니다.</p></div>
+    </section>
+
+    <section class="bike-section" id="limits" aria-labelledby="limits-title">
+      <p class="bike-kicker">06 / WHAT I LEARNED</p>
+      <h2 id="limits-title">분석한 것과, 더 알아야 할 것을 구분하기.</h2>
+      <p>가장 큰 배움은 분모를 바꾸면 해석도 달라진다는 점이었습니다. 총량·인구당·면적당 지표를 나란히 보고, 그래프에서 생긴 질문을 지도로 다시 확인하는 과정을 경험했습니다. Pandas로 표를 연결하는 작업에서 GeoPandas의 공간 결합과 Folium 시각화까지 확장해 봤습니다.</p>
+      <div class="bike-grid">
+        <div class="bike-note"><span class="bike-label">이번에 확인한 것</span><h3>시설과 인구의 분포</h3><p>도로 총연장, 지역별 정류장 수와 밀도, 구·군별 인구밀도를 비교했습니다. 이를 바탕으로 시범 운영을 검토할 생활권을 정리했습니다.</p></div>
+        <div class="bike-note"><span class="bike-label">다음에 확인할 것</span><h3>이용 수요와 주행 가능성</h3><p>정류장별 승하차 인원, 시간대별 이동, 경사도, 도로 단절과 안전성, 이용자 설문을 더하면 후보지를 구체적인 설치 위치로 좁힐 수 있습니다.</p></div>
+      </div>
+      <p>인구 자료는 <strong>거주 내국인 수</strong>이며 유동인구가 아닙니다. 버스정류장 밀도가 높아도 자전거 이용 수요가 높다고 단정할 수 없습니다. 또한 서로 다른 시점의 자료와 전사한 통계표를 사용했으므로, 실제 사업 검토에는 최신 원자료 대조와 현장 검증이 필요합니다.</p>
+      <p class="bike-caption">이 페이지는 「울산공공자전거제안-김정음.ipynb」의 저장된 그래프·지도·제안을 선별해 정리한 기록입니다. 전국 비교의 핵심 수치는 원자료로 다시 계산했습니다. 노트북 전체의 처음부터 끝까지 재실행은 검증하지 않았으며, import와 셀 실행 순서는 재현성을 높이기 위해 정리할 부분으로 남아 있습니다.</p>
+    </section>
+    <div class="bike-bottom"><a class="text-button" href="../index.html">← 다른 프로젝트 보기</a></div>
+  </main>
+  <footer class="site-footer"><span>© <span data-year></span> fonaa8220</span><a href="../../../index.html">홈으로 돌아가기</a></footer>
+</body>
+</html>
