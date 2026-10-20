@@ -8,7 +8,7 @@
 - 공개 사용자는 조회와 추가만 가능
 - 수정과 삭제는 공개되지 않음
 
-브라우저는 `supabase-config.js`의 Project URL과 Publishable key를 사용한다. Publishable key는 공개 웹 앱용 키이며, 실제 데이터 권한은 RLS가 제한한다.
+브라우저는 `shared/supabase-config.js`의 Project URL과 Publishable key를 사용한다. Publishable key는 공개 웹 앱용 키이며, 실제 데이터 권한은 RLS가 제한한다.
 
 ## 주의사항
 
@@ -25,4 +25,4 @@
 
 ## 수동 재적용
 
-DB 구성을 다시 적용해야 할 때는 Supabase Dashboard의 SQL Editor에서 `supabase-schema.sql`을 실행한다. SQL은 여러 번 실행해도 같은 정책과 권한 상태가 되도록 작성되어 있다.
+DB 구성을 다시 적용해야 할 때는 Supabase Dashboard의 SQL Editor에서 `docs/supabase-schema.sql`을 실행한다. SQL은 여러 번 실행해도 같은 정책과 권한 상태가 되도록 작성되어 있다.
